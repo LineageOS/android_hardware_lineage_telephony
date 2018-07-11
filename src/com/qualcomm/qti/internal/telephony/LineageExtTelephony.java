@@ -47,6 +47,8 @@ import static android.telephony.SubscriptionManager.INVALID_SUBSCRIPTION_ID;
 import static android.telephony.TelephonyManager.SIM_ACTIVATION_STATE_ACTIVATED;
 import static android.telephony.TelephonyManager.SIM_ACTIVATION_STATE_DEACTIVATED;
 
+import static android.telephony.TelephonyManager.MultiSimVariants.DSDA;
+
 import static com.android.internal.telephony.uicc.IccCardStatus.CardState.CARDSTATE_PRESENT;
 
 public class LineageExtTelephony extends IExtTelephony.Stub {
@@ -405,8 +407,7 @@ public class LineageExtTelephony extends IExtTelephony.Stub {
 
     @Override
     public boolean isDsdaEnabled() {
-        // I hope we don't use this
-        return false;
+        return sTelephonyManager.getMultiSimConfiguration() == DSDA;
     }
 
     @Override
