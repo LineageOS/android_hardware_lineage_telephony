@@ -45,6 +45,9 @@ import java.util.Iterator;
 
 import static android.telephony.SubscriptionManager.INVALID_SUBSCRIPTION_ID;
 
+import static android.telephony.TelephonyManager.CARD_POWER_DOWN;
+import static android.telephony.TelephonyManager.CARD_POWER_UP;
+
 import static android.telephony.TelephonyManager.SIM_ACTIVATION_STATE_ACTIVATED;
 import static android.telephony.TelephonyManager.SIM_ACTIVATION_STATE_DEACTIVATED;
 
@@ -188,6 +191,11 @@ public class LineageExtTelephony extends IExtTelephony.Stub {
         broadcastUiccActivation(slotId);
     }
 
+    private void setPowerState(int slotId, boolean activate) {
+        sCommandsInterfaces[slotId].setSimCardPower(
+                activate ? CARD_POWER_UP : CARD_POWER_DOWN, null);
+    }
+
     private void setUiccActivation(int slotId, boolean activate) {
         UiccCard card = sPhones[slotId].getUiccCard();
 
@@ -266,6 +274,7 @@ public class LineageExtTelephony extends IExtTelephony.Stub {
 
         sUiccStatus[slotId].mStatus = PROVISIONED;
 
+        setPowerState(slotId, true);
         setUiccActivation(slotId, true);
         sPhones[slotId].setVoiceActivationState(SIM_ACTIVATION_STATE_ACTIVATED);
         sPhones[slotId].setDataActivationState(SIM_ACTIVATION_STATE_ACTIVATED);
@@ -331,6 +340,7 @@ public class LineageExtTelephony extends IExtTelephony.Stub {
         sPhones[slotId].setVoiceActivationState(SIM_ACTIVATION_STATE_DEACTIVATED);
         sPhones[slotId].setDataActivationState(SIM_ACTIVATION_STATE_DEACTIVATED);
         setUiccActivation(slotId, false);
+        setPowerState(slotId, false);
 
         sBusy = false;
 
