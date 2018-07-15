@@ -101,7 +101,6 @@ public class LineageExtTelephony extends IExtTelephony.Stub {
     private UiccStatus mUiccStatus[];
     private boolean mBusy;
 
-
     public static void init(Context context, Phone[] phones,
             CommandsInterface[] commandsInterfaces) {
         sInstance = getInstance(context, phones, commandsInterfaces);
@@ -194,19 +193,34 @@ public class LineageExtTelephony extends IExtTelephony.Stub {
     }
 
     private void setUiccActivation(int slotId, boolean activate) {
-        UiccCard card = mPhones[slotId].getUiccCard();
+        byte[] data = {
+            0x51,
+            0x4f,
+            0x45,
+            0x4d,
+            0x48,
+            0x4f,
+            0x4f,
+            0x4b,
+            0x5b,
+            0x00,
+            0x08,
+            0x00,
+            0x08,
+            0x00,
+            0x00,
+            0x00,
+            activate ? (byte) PROVISIONED : (byte) NOT_PROVISIONED,
+            0x00,
+            0x00,
+            0x00,
+            (byte) slotId,
+            0x00,
+            0x00,
+            0x00
+        };
 
-        int numApps = card.getNumApplications();
-
-        mUiccStatus[slotId].mProvisioned = activate;
-
-        for (int i = 0; i < numApps; i++) {
-            if (card.getApplicationIndex(i) == null) {
-                continue;
-            }
-
-            mCommandsInterfaces[slotId].setUiccSubscription(i, activate, null);
-        }
+        mCommandsInterfaces[slotId].invokeOemRilRequestRaw(data, null);
     }
 
     private void broadcastUiccActivation(int slotId) {
