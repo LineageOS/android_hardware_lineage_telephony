@@ -36,10 +36,13 @@ import com.android.internal.telephony.uicc.IccCardStatus.CardState;
 import com.android.internal.telephony.uicc.UiccCard;
 import com.android.internal.telephony.uicc.UiccController;
 
+import com.qualcomm.qcrilhook.QcRilHook;
+
 import org.codeaurora.internal.IDepersoResCallback;
 import org.codeaurora.internal.IDsda;
 import org.codeaurora.internal.IExtTelephony;
 
+import java.nio.ByteBuffer;
 import java.util.Iterator;
 
 import static android.telephony.SubscriptionManager.INVALID_SUBSCRIPTION_ID;
@@ -50,6 +53,8 @@ import static android.telephony.TelephonyManager.SIM_ACTIVATION_STATE_DEACTIVATE
 import static android.telephony.TelephonyManager.MultiSimVariants.DSDA;
 
 import static com.android.internal.telephony.uicc.IccCardStatus.CardState.CARDSTATE_PRESENT;
+
+import static com.qualcomm.qcrilhook.QcRilHook.QCRIL_EVT_HOOK_SET_UICC_PROVISION_PREFERENCE;
 
 public class LineageExtTelephony extends IExtTelephony.Stub {
 
@@ -92,6 +97,7 @@ public class LineageExtTelephony extends IExtTelephony.Stub {
     private static Context sContext;
     private static LineageExtTelephony sInstance;
     private static Phone[] sPhones;
+    private static QcRilHook sQcRilHook;
     private static SubscriptionManager sSubscriptionManager;
     private static TelecomManager sTelecomManager;
     private static TelephonyManager sTelephonyManager;
@@ -105,6 +111,7 @@ public class LineageExtTelephony extends IExtTelephony.Stub {
         sCommandsInterfaces = commandsInterfaces;
         sContext = context;
         sPhones = phones;
+        sQcRilHook = new QcRilHook(context, null);
         sSubscriptionManager = (SubscriptionManager) sContext.getSystemService(
                 Context.TELEPHONY_SUBSCRIPTION_SERVICE);
         sTelecomManager = TelecomManager.from(context);
@@ -183,7 +190,13 @@ public class LineageExtTelephony extends IExtTelephony.Stub {
     }
 
     private void setUiccActivation(int slotId, boolean activate) {
+        byte[] data = new byte[8];
+        ByteBuffer buffer = sQcRilHook.createBufferWithNativeByteOrder(data);
 
+        buffer.putInt(provisioned ? PROVISIONED : NOT_PROVISIONED);
+        buffer.putInt(slotId);
+
+        sQcRilHook.sendQcRilHookMsg(QCRIL_EVT_HOOK_SET_UICC_PROVISION_PREFERENCE, data, slotId);
     }
 
     private void broadcastUiccActivation(int slotId) {
