@@ -32,15 +32,17 @@ import android.telephony.TelephonyManager;
 import com.android.internal.telephony.CommandsInterface;
 import com.android.internal.telephony.Phone;
 import com.android.internal.telephony.PhoneConstants;
-import com.android.internal.telephony.uicc.IccCardApplicationStatus.AppType;
 import com.android.internal.telephony.uicc.IccCardStatus.CardState;
 import com.android.internal.telephony.uicc.UiccCard;
 import com.android.internal.telephony.uicc.UiccController;
+
+import com.qualcomm.qcrilhook.QcRilHook;
 
 import org.codeaurora.internal.IDepersoResCallback;
 import org.codeaurora.internal.IDsda;
 import org.codeaurora.internal.IExtTelephony;
 
+import java.nio.ByteBuffer;
 import java.util.Iterator;
 
 import static android.telephony.SubscriptionManager.INVALID_SUBSCRIPTION_ID;
@@ -50,12 +52,9 @@ import static android.telephony.TelephonyManager.SIM_ACTIVATION_STATE_DEACTIVATE
 
 import static android.telephony.TelephonyManager.MultiSimVariants.DSDA;
 
-import static com.android.internal.telephony.uicc.IccCardApplicationStatus.AppType.APPTYPE_CSIM;
-import static com.android.internal.telephony.uicc.IccCardApplicationStatus.AppType.APPTYPE_RUIM;
-import static com.android.internal.telephony.uicc.IccCardApplicationStatus.AppType.APPTYPE_SIM;
-import static com.android.internal.telephony.uicc.IccCardApplicationStatus.AppType.APPTYPE_USIM;
-
 import static com.android.internal.telephony.uicc.IccCardStatus.CardState.CARDSTATE_PRESENT;
+
+import static com.qualcomm.qcrilhook.QcRilHook.QCRIL_EVT_HOOK_SET_UICC_PROVISION_PREFERENCE;
 
 public class LineageExtTelephony extends IExtTelephony.Stub {
 
@@ -98,6 +97,7 @@ public class LineageExtTelephony extends IExtTelephony.Stub {
     private static Context sContext;
     private static LineageExtTelephony sInstance;
     private static Phone[] sPhones;
+    private static QcRilHook sQcRilHook;
     private static SubscriptionManager sSubscriptionManager;
     private static TelecomManager sTelecomManager;
     private static TelephonyManager sTelephonyManager;
@@ -111,6 +111,7 @@ public class LineageExtTelephony extends IExtTelephony.Stub {
         sCommandsInterfaces = commandsInterfaces;
         sContext = context;
         sPhones = phones;
+        sQcRilHook = new QcRilHook(context, null);
         sSubscriptionManager = (SubscriptionManager) sContext.getSystemService(
                 Context.TELEPHONY_SUBSCRIPTION_SERVICE);
         sTelecomManager = TelecomManager.from(context);
@@ -189,33 +190,13 @@ public class LineageExtTelephony extends IExtTelephony.Stub {
     }
 
     private void setUiccActivation(int slotId, boolean activate) {
-        UiccCard card = sPhones[slotId].getUiccCard();
+        byte[] data = new byte[8];
+        ByteBuffer buffer = sQcRilHook.createBufferWithNativeByteOrder(data);
 
-        int numApps = card.getNumApplications();
-        int gsmIndex = -1;
-        int cdmaIndex = -1;
+        buffer.putInt(provisioned ? PROVISIONED : NOT_PROVISIONED);
+        buffer.putInt(slotId);
 
-        sUiccStatus[slotId].mProvisioned = activate;
-
-        for (int i = 0; i < numApps; i++) {
-            if (card.getApplicationIndex(i) == null) {
-                continue;
-            }
-
-            AppType appType = card.getApplicationIndex(i).getType();
-            if (gsmIndex < 0 && (appType == APPTYPE_USIM || appType == APPTYPE_SIM)) {
-                gsmIndex = i;
-            } else if (cdmaIndex < 0 && (appType == APPTYPE_CSIM || appType == APPTYPE_RUIM)) {
-                cdmaIndex = i;
-            }
-        }
-
-        if (gsmIndex >= 0) {
-            sCommandsInterfaces[slotId].setUiccSubscription(gsmIndex, activate, null);
-        }
-        if (cdmaIndex >= 0) {
-            sCommandsInterfaces[slotId].setUiccSubscription(cdmaIndex, activate, null);
-        }
+        sQcRilHook.sendQcRilHookMsg(QCRIL_EVT_HOOK_SET_UICC_PROVISION_PREFERENCE, data, slotId);
     }
 
     private void broadcastUiccActivation(int slotId) {
