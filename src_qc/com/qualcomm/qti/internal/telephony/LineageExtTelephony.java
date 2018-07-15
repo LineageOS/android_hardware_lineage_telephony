@@ -36,10 +36,16 @@ import com.android.internal.telephony.uicc.IccCardStatus.CardState;
 import com.android.internal.telephony.uicc.UiccCard;
 import com.android.internal.telephony.uicc.UiccController;
 
+import dalvik.system.PathClassLoader;
+
 import org.codeaurora.internal.IDepersoResCallback;
 import org.codeaurora.internal.IDsda;
 import org.codeaurora.internal.IExtTelephony;
 
+import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Iterator;
 
 import static android.telephony.SubscriptionManager.INVALID_SUBSCRIPTION_ID;
@@ -52,6 +58,25 @@ import static android.telephony.TelephonyManager.MultiSimVariants.DSDA;
 import static com.android.internal.telephony.uicc.IccCardStatus.CardState.CARDSTATE_PRESENT;
 
 public class LineageExtTelephony extends IExtTelephony.Stub {
+
+    class QcRilHook {
+
+        Object mInstance;
+        Method mSendQcRilHookMsgMethod;
+
+        QcRilHook(Object instance, Method sendQcRilHookMsg) {
+            mInstance = instance;
+            mSendQcRilHookMsgMethod = sendQcRilHookMsg;
+        }
+
+        void sendQcRilHookMsg(int command, byte[] data, int slotId) {
+            try {
+               mSendQcRilHookMsgMethod.invoke(mInstance, command, data, slotId);
+            } catch (Exception e) {
+            }
+        }
+
+    }
 
     class UiccStatus {
 
@@ -90,17 +115,20 @@ public class LineageExtTelephony extends IExtTelephony.Stub {
 
     private static LineageExtTelephony sInstance;
 
+    // Retrived through reflection
+    private int QCRIL_EVT_HOOK_SET_UICC_PROVISION_PREFERENCE;
+
     private CommandsInterface[] mCommandsInterfaces;
     private Context mContext;
     private Handler mHandler;
     private Phone[] mPhones;
+    private QcRilHook mQcRilHook;
     private SubscriptionManager mSubscriptionManager;
     private TelecomManager mTelecomManager;
     private TelephonyManager mTelephonyManager;
     private UiccController mUiccController;
     private UiccStatus mUiccStatus[];
     private boolean mBusy;
-
 
     public static void init(Context context, Phone[] phones,
             CommandsInterface[] commandsInterfaces) {
@@ -118,10 +146,6 @@ public class LineageExtTelephony extends IExtTelephony.Stub {
 
     private LineageExtTelephony(Context context, Phone[] phones,
             CommandsInterface[] commandsInterfaces) {
-        if (ServiceManager.getService(EXT_TELEPHONY_SERVICE_NAME) == null) {
-            ServiceManager.addService(EXT_TELEPHONY_SERVICE_NAME, this);
-        }
-
         mCommandsInterfaces = commandsInterfaces;
 
         mContext = context;
@@ -167,6 +191,55 @@ public class LineageExtTelephony extends IExtTelephony.Stub {
 
         mUiccController = UiccController.getInstance();
         mUiccController.registerForIccChanged(mHandler, EVENT_ICC_CHANGED, null);
+
+        String qcRilHookPath = null;
+        if ((new File("/system/framework/qcrilhook.jar")).exists()) {
+            qcRilHookPath = "/system/framework/qcrilhook.jar";
+        } else if ((new File("/vendor/framework/qcrilhook.jar")).exists()) {
+            qcRilHookPath = "/vendor/framework/qcrilhook.jar";
+        } else {
+            return;
+        }
+
+        PathClassLoader pathClassLoader = new PathClassLoader(
+                qcRilHookPath, ClassLoader.getSystemClassLoader());
+        mQcRilHook = createQcRilHook(pathClassLoader, context);
+
+        if (mQcRilHook == null) {
+            return;
+        }
+
+        if (ServiceManager.getService(EXT_TELEPHONY_SERVICE_NAME) == null) {
+            ServiceManager.addService(EXT_TELEPHONY_SERVICE_NAME, this);
+        }
+    }
+
+    private QcRilHook createQcRilHook(ClassLoader loader, Context context) {
+        String qcRilHookClassName = "com.qualcomm.qcrilhook.QcRilHook";
+
+        try {
+            Class<?> qcRilHookClass = Class.forName(qcRilHookClassName, false, loader);
+
+            Constructor<?> qcRilHookConstructor = qcRilHookClass.getDeclaredConstructor(
+                    Context.class);
+
+            Object qcRilHookInstance = qcRilHookConstructor.newInstance(context);
+
+            Method sendQcRilHookMsg = qcRilHookClass.getMethod(
+                    "sendQcRilHookMsg", int.class, byte[].class, int.class);
+
+            Field setUiccProvisionPreference = qcRilHookClass.getField(
+                   "QCRIL_EVT_HOOK_SET_UICC_PROVISION_PREFERENCE");
+
+            if (setUiccProvisionPreference.getType() != int.class) {
+                return null;
+            }
+
+            QCRIL_EVT_HOOK_SET_UICC_PROVISION_PREFERENCE = setUiccProvisionPreference.getInt(null);
+            return new QcRilHook(qcRilHookInstance, sendQcRilHookMsg);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private synchronized void iccStatusChanged(int slotId) {
@@ -194,19 +267,11 @@ public class LineageExtTelephony extends IExtTelephony.Stub {
     }
 
     private void setUiccActivation(int slotId, boolean activate) {
-        UiccCard card = mPhones[slotId].getUiccCard();
+        byte[] data = new byte[4];
 
-        int numApps = card.getNumApplications();
+        data[0] = activate ? (byte) PROVISIONED : (byte) NOT_PROVISIONED;
 
-        mUiccStatus[slotId].mProvisioned = activate;
-
-        for (int i = 0; i < numApps; i++) {
-            if (card.getApplicationIndex(i) == null) {
-                continue;
-            }
-
-            mCommandsInterfaces[slotId].setUiccSubscription(i, activate, null);
-        }
+        mQcRilHook.sendQcRilHookMsg(QCRIL_EVT_HOOK_SET_UICC_PROVISION_PREFERENCE, data, slotId);
     }
 
     private void broadcastUiccActivation(int slotId) {
