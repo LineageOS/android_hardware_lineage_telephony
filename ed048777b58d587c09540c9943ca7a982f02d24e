@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f7a796e6_43dbc8e3",
+        "filename": "src_qc/com/qualcomm/qti/internal/telephony/LineageExtTelephony.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2018-07-16T02:08:02Z",
+      "side": 1,
+      "message": "It\u0027d be better to put all this stuff in it\u0027s own function.",
+      "revId": "ed048777b58d587c09540c9943ca7a982f02d24e",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fe39dbcd_7950926d",
+        "filename": "src_qc/com/qualcomm/qti/internal/telephony/LineageExtTelephony.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2018-07-16T02:08:02Z",
+      "side": 1,
+      "message": "maybe you want better variable names",
+      "range": {
+        "startLine": 180,
+        "startChar": 19,
+        "endLine": 180,
+        "endChar": 31
+      },
+      "revId": "ed048777b58d587c09540c9943ca7a982f02d24e",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a8cda26f_2ebd3db7",
+        "filename": "src_qc/com/qualcomm/qti/internal/telephony/LineageExtTelephony.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2018-07-16T02:08:02Z",
+      "side": 1,
+      "message": "I don\u0027t really get why you even need reflection for this at all. This is all system code, presumably on the classpath, why can\u0027t it be called normally?",
+      "range": {
+        "startLine": 190,
+        "startChar": 25,
+        "endLine": 190,
+        "endChar": 38
+      },
+      "revId": "ed048777b58d587c09540c9943ca7a982f02d24e",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ce93aa85_3f9f3861",
+        "filename": "src_qc/com/qualcomm/qti/internal/telephony/LineageExtTelephony.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2018-07-16T02:08:02Z",
+      "side": 1,
+      "message": "Is this supposed to be some kind of parcel?",
+      "range": {
+        "startLine": 240,
+        "startChar": 0,
+        "endLine": 244,
+        "endChar": 30
+      },
+      "revId": "ed048777b58d587c09540c9943ca7a982f02d24e",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
