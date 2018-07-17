@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "85a046e2_8f74b3fc",
+        "filename": "src_qc/com/qualcomm/qti/internal/telephony/LineageExtTelephony.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 11801
+      },
+      "writtenOn": "2018-07-17T14:47:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f7a796e6_43dbc8e3",
+      "revId": "ed048777b58d587c09540c9943ca7a982f02d24e",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fe39dbcd_7950926d",
         "filename": "src_qc/com/qualcomm/qti/internal/telephony/LineageExtTelephony.java",
         "patchSetId": 10
@@ -30,6 +48,30 @@
       "writtenOn": "2018-07-16T02:08:02Z",
       "side": 1,
       "message": "maybe you want better variable names",
+      "range": {
+        "startLine": 180,
+        "startChar": 19,
+        "endLine": 180,
+        "endChar": 31
+      },
+      "revId": "ed048777b58d587c09540c9943ca7a982f02d24e",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1453f076_5b9c74f6",
+        "filename": "src_qc/com/qualcomm/qti/internal/telephony/LineageExtTelephony.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 11801
+      },
+      "writtenOn": "2018-07-17T14:47:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fe39dbcd_7950926d",
       "range": {
         "startLine": 180,
         "startChar": 19,
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "2f6d8e23_07c481a9",
+        "filename": "src_qc/com/qualcomm/qti/internal/telephony/LineageExtTelephony.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 11801
+      },
+      "writtenOn": "2018-07-17T14:47:40Z",
+      "side": 1,
+      "message": "I tried all of yesterday, and couldn\u0027t find a working to link against a non-static prebuilt jar.",
+      "parentUuid": "a8cda26f_2ebd3db7",
+      "range": {
+        "startLine": 190,
+        "startChar": 25,
+        "endLine": 190,
+        "endChar": 38
+      },
+      "revId": "ed048777b58d587c09540c9943ca7a982f02d24e",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ce93aa85_3f9f3861",
         "filename": "src_qc/com/qualcomm/qti/internal/telephony/LineageExtTelephony.java",
         "patchSetId": 10
@@ -76,6 +142,30 @@
       "writtenOn": "2018-07-16T02:08:02Z",
       "side": 1,
       "message": "Is this supposed to be some kind of parcel?",
+      "range": {
+        "startLine": 240,
+        "startChar": 0,
+        "endLine": 244,
+        "endChar": 30
+      },
+      "revId": "ed048777b58d587c09540c9943ca7a982f02d24e",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "082a45d4_cc0ce4ec",
+        "filename": "src_qc/com/qualcomm/qti/internal/telephony/LineageExtTelephony.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 11801
+      },
+      "writtenOn": "2018-07-17T14:47:40Z",
+      "side": 1,
+      "message": "Ish. It\u0027s just a simple byte array w/ data.",
+      "parentUuid": "ce93aa85_3f9f3861",
       "range": {
         "startLine": 240,
         "startChar": 0,
