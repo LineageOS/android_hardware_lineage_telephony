@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a331358_d2e1eb39",
+        "filename": "src_qc/com/qualcomm/qti/internal/telephony/LineageExtTelephony.java",
+        "patchSetId": 15
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1063
+      },
+      "writtenOn": "2018-08-05T12:12:47Z",
+      "side": 1,
+      "message": "I\u0027d probably make this \u0027void setSubscriptionEnabled(into slotId, boolean enable)\u0027, move the array stuff below over to here and use the command ID fetched via reflection here.",
+      "revId": "f6b061bd36570125c9b2cca549baba609787e005",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7bab7b78_d68cc581",
+        "filename": "src_qc/com/qualcomm/qti/internal/telephony/LineageExtTelephony.java",
+        "patchSetId": 15
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1063
+      },
+      "writtenOn": "2018-08-05T12:12:47Z",
+      "side": 1,
+      "message": "Could probably factor out the above to a getRilHookClassLoader() method returning the class loader instance and then call\n\nmQcRilHook \u003d createRilHook(context, getRilHookClassLoader());",
+      "revId": "f6b061bd36570125c9b2cca549baba609787e005",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "adc38705_3a9445bc",
+        "filename": "src_qc/com/qualcomm/qti/internal/telephony/LineageExtTelephony.java",
+        "patchSetId": 15
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1063
+      },
+      "writtenOn": "2018-08-05T12:12:47Z",
+      "side": 1,
+      "message": "Why not inline this below?",
+      "revId": "f6b061bd36570125c9b2cca549baba609787e005",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "014db4bc_eb9a991e",
+        "filename": "src_qc/com/qualcomm/qti/internal/telephony/LineageExtTelephony.java",
+        "patchSetId": 15
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1063
+      },
+      "writtenOn": "2018-08-05T12:12:47Z",
+      "side": 1,
+      "message": "Maybe move this field to the QcRilHook instance since it also was retrieved via reflection?",
+      "revId": "f6b061bd36570125c9b2cca549baba609787e005",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": true
+    }
+  ]
+}
