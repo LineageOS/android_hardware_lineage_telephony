@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "55f87555_6810af06",
+        "filename": "src_qc/com/qualcomm/qti/internal/telephony/LineageExtTelephony.java",
+        "patchSetId": 16
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 11801
+      },
+      "writtenOn": "2018-08-05T20:30:54Z",
+      "side": 1,
+      "message": "Done, ish",
+      "parentUuid": "de7d5dad_935bca93",
+      "revId": "888cb936733909384d64adc56d672257d332b266",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d97fbe12_7497917e",
         "filename": "src_qc/com/qualcomm/qti/internal/telephony/LineageExtTelephony.java",
         "patchSetId": 16
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "ce03c6a5_91a1bc8a",
+        "filename": "src_qc/com/qualcomm/qti/internal/telephony/LineageExtTelephony.java",
+        "patchSetId": 16
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 11801
+      },
+      "writtenOn": "2018-08-05T20:30:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d97fbe12_7497917e",
+      "revId": "888cb936733909384d64adc56d672257d332b266",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bf578487_76bbfff3",
         "filename": "src_qc/com/qualcomm/qti/internal/telephony/LineageExtTelephony.java",
         "patchSetId": 16
@@ -47,6 +83,24 @@
       "writtenOn": "2018-08-05T20:21:48Z",
       "side": 1,
       "message": "When doing the above, just return null here.",
+      "revId": "888cb936733909384d64adc56d672257d332b266",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2ff24133_68c7446d",
+        "filename": "src_qc/com/qualcomm/qti/internal/telephony/LineageExtTelephony.java",
+        "patchSetId": 16
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 11801
+      },
+      "writtenOn": "2018-08-05T20:30:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bf578487_76bbfff3",
       "revId": "888cb936733909384d64adc56d672257d332b266",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": true
